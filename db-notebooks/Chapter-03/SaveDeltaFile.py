@@ -40,4 +40,4 @@ display(dbutils.fs.ls(DATALAKE_PATH))
 # COMMAND ----------
 
 # MAGIC %fs
-# MAGIC ls dbfs:/dluar/data
+# MAGIC ls /databricks-datasets/nyctaxi/reference

@@ -1,6 +1,6 @@
 # Databricks notebook source
 INPUT_PATH = '/databricks-datasets/nyctaxi/taxizone/taxi_rate_code.csv'
-DELTALAKE_PATH = '/dluar/ch03/createDeltaTableWithDataFrameWriter'
+DELTALAKE_PATH = 'dbfs:/mnt/datalake/book/chapter03/createDeltaTableWithDataFrameWriter'
 
 # COMMAND ----------
 
@@ -19,13 +19,17 @@ df_rate_codes = spark                                              \
 
 # COMMAND ----------
 
+display(df_rate_codes)
+
+# COMMAND ----------
+
 # Save our DataFrame as a managed Hive table
-df_rate_codes.write.format("delta").saveAsTable('default.rateCard')
+df_rate_codes.write.format("delta").saveAsTable('taxidb.rateCard')
 
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC DESCRIBE TABLE EXTENDED default.rateCard;
+# MAGIC DESCRIBE TABLE EXTENDED taxidb.rateCard;
 
 # COMMAND ----------
 
@@ -35,17 +39,23 @@ df_rate_codes.write.format("delta").saveAsTable('default.rateCard')
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC drop table if exists default.rateCard;
+# MAGIC select * from taxidb.ratecard
 
 # COMMAND ----------
 
-# First, write out the data frame to our 
+# MAGIC %sql
+# MAGIC -- Drop the existing table
+# MAGIC drop table if exists taxidb.rateCard;
+
+# COMMAND ----------
+
+# Next, write out the data frame to our 
 # Data Lake Path
 df_rate_codes                     \
         .write                    \
         .format("delta")          \
         .mode("overwrite")        \
-        .save('/dluar/chapter03/createDeltaTableWithDataFrameWriter')
+        .save(DELTALAKE_PATH)
 
 # COMMAND ----------
 
@@ -54,15 +64,20 @@ df_rate_codes.printSchema()
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC -- Next, we create an unmanaged table on top of the Data Lake Path
-# MAGIC CREATE OR REPLACE TABLE default.rateCard
+# MAGIC -- Finally, we create an unmanaged table on top of the Data Lake Path
+# MAGIC CREATE OR REPLACE TABLE taxidb.rateCard
 # MAGIC (
 # MAGIC     RateCodeID   INT,
 # MAGIC     RateCodeDesc STRING
 # MAGIC )
-# MAGIC LOCATION '/dluar/ch03/createDeltaTableWithDataFrameWriter'
+# MAGIC LOCATION 'dbfs:/mnt/datalake/book/chapter03/createDeltaTableWithDataFrameWriter'
 
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC select * from default.rateCard
+# MAGIC select * from taxidb.rateCard
+
+# COMMAND ----------
+
+# MAGIC %fs
+# MAGIC head databricks-datasets/nyctaxi/taxizone/taxi_zone_lookup.csv

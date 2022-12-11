@@ -43,7 +43,7 @@ DeltaTable.createOrReplace(spark) \
 # creating a MANAGED table
 #
 DeltaTable.createIfNotExists(spark)                              \
-    .tableName("default.greentaxis")                             \
+    .tableName("taxidb.greentaxis")                             \
     .addColumn("RideId", "INT", comment = "Primary Key")         \
     .addColumn("VendorId", "INT", comment = "Ride Vendor")       \
     .addColumn("EventType", "STRING")                            \
@@ -87,7 +87,7 @@ DeltaTable.createIfNotExists(spark)                              \
 # creating a UNMANAGED table
 #
 DeltaTable.createIfNotExists(spark)                              \
-    .tableName("default.greentaxis")                             \
+    .tableName("taxidb.greentaxis")                              \
     .addColumn("RideId", "INT", comment = "Primary Key")         \
     .addColumn("VendorId", "INT", comment = "Ride Vendor")       \
     .addColumn("EventType", "STRING")                            \

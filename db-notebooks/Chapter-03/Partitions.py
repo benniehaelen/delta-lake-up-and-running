@@ -1,39 +1,102 @@
 # Databricks notebook source
-# MAGIC %fs
-# MAGIC ls /dluar/data/green_tripdata_2019_12.csv
-
-# COMMAND ----------
-
-INPUT_PATH = '/dluar/data/green_tripdata_2019_12.csv'
-
-df = spark.read.format("csv").option("inferschema", True).option("header", True).load(INPUT_PATH)
-df.printSchema()
+# MAGIC %sql
+# MAGIC drop table if exists taxidb.YellowTaxisPartitioned;
 
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC CREATE TABLE IF NOT EXISTS greentaxi.tripData
+# MAGIC CREATE TABLE taxidb.YellowTaxisPartitioned
 # MAGIC (
-# MAGIC     vendorId             INT,
-# MAGIC     lpepPickup           TIMESTAMP,
-# MAGIC     lpepDropoff          TIMESTAMP,
-# MAGIC     storeAndForewardFlag STRING,
-# MAGIC     rateCodeID           INT,
-# MAGIC     puLocationID         INT,
-# MAGIC     doLocationID         INT,
-# MAGIC     passengerCount       INT,
-# MAGIC     tripDistance         DOUBLE,
-# MAGIC     fareAmount           DOUBLE,
-# MAGIC     extra                DOUBLE,
-# MAGIC     mtaTax               DOUBLE,
-# MAGIC     tipAmount            DOUBLE,
-# MAGIC     tollsAmount          DOUBLE,
-# MAGIC     ehailFee             DOUBLE,
-# MAGIC     improvementSurcharge DOUBLE,
-# MAGIC     totalAmount          DOUBLE,
-# MAGIC     paymentType          INT,
-# MAGIC     tripType             INT,
-# MAGIC     congestionSurcharge  DOUBLE
-# MAGIC )
-# MAGIC USING DELTA
-# MAGIC LOCATION ('/dluar/greentaxi/tripData/')
+# MAGIC     RideId                  INT,
+# MAGIC     VendorId                INT,
+# MAGIC     PickupTime              TIMESTAMP,
+# MAGIC     DropTime                TIMESTAMP,
+# MAGIC     PickupLocationId        INT,
+# MAGIC     DropLocationId          INT,
+# MAGIC     CabNumber               STRING,
+# MAGIC     DriverLicenseNumber     STRING,
+# MAGIC     PassengerCount          INT,
+# MAGIC     TripDistance            DOUBLE,
+# MAGIC     RatecodeId              INT,
+# MAGIC     PaymentType             INT,
+# MAGIC     TotalAmount             DOUBLE,
+# MAGIC     FareAmount              DOUBLE,
+# MAGIC     Extra                   DOUBLE,
+# MAGIC     MtaTax                  DOUBLE,
+# MAGIC     TipAmount               DOUBLE,
+# MAGIC     TollsAmount             DOUBLE,         
+# MAGIC     ImprovementSurcharge    DOUBLE
+# MAGIC     
+# MAGIC ) USING DELTA         
+# MAGIC PARTITIONED BY(VendorId)
+# MAGIC LOCATION "/mnt/datalake/book/chapter03/YellowTaxisDeltaPartitioned"
+
+# COMMAND ----------
+
+input_df = spark.read.format("delta").table("taxidb.YellowTaxis")
+
+# COMMAND ----------
+
+input_df                                                               \
+    .write                                                             \
+    .format("delta")                                                   \
+    .mode("overwrite")                                                 \
+    .save("/mnt/datalake/book/chapter03/YellowTaxisDeltaPartitioned")
+
+
+# COMMAND ----------
+
+# MAGIC %sh
+# MAGIC ls -al /dbfs/mnt/datalake/book/chapter03/YellowTaxisDeltaPartitioned
+
+# COMMAND ----------
+
+# MAGIC %sh
+# MAGIC ls -al /dbfs/mnt/datalake/book/chapter03/YellowTaxisDeltaPartitioned/VendorId=1
+
+# COMMAND ----------
+
+# MAGIC %sql 
+# MAGIC SELECT 
+# MAGIC     DISTINCT(VendorId) 
+# MAGIC FROM
+# MAGIC     taxidb.YellowTaxisPartitioned;
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC SELECT 
+# MAGIC     COUNT(*) > 0 AS `Partition exists`
+# MAGIC FROM 
+# MAGIC     taxidb.YellowTaxisPartitioned
+# MAGIC WHERE 
+# MAGIC     VendorId = 2
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC CREATE TABLE taxidb.YellowTaxisPartitioned
+# MAGIC (
+# MAGIC     RideId                  INT,
+# MAGIC     VendorId                INT,
+# MAGIC     PickupTime              TIMESTAMP,
+# MAGIC     DropTime                TIMESTAMP,
+# MAGIC     PickupLocationId        INT,
+# MAGIC     DropLocationId          INT,
+# MAGIC     CabNumber               STRING,
+# MAGIC     DriverLicenseNumber     STRING,
+# MAGIC     PassengerCount          INT,
+# MAGIC     TripDistance            DOUBLE,
+# MAGIC     RatecodeId              INT,
+# MAGIC     PaymentType             INT,
+# MAGIC     TotalAmount             DOUBLE,
+# MAGIC     FareAmount              DOUBLE,
+# MAGIC     Extra                   DOUBLE,
+# MAGIC     MtaTax                  DOUBLE,
+# MAGIC     TipAmount               DOUBLE,
+# MAGIC     TollsAmount             DOUBLE,         
+# MAGIC     ImprovementSurcharge    DOUBLE
+# MAGIC     
+# MAGIC ) USING DELTA         
+# MAGIC PARTITIONED BY(VendorId, RateCodeId)
+# MAGIC LOCATION "/mnt/datalake/book/chapter03/YellowTaxisDeltaPartitioned"
