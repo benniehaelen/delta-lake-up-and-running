@@ -61,5 +61,15 @@ df.write.format("delta").mode("overwrite").save("/mnt/datalake/book/chapter03/Ye
 # COMMAND ----------
 
 # MAGIC %md
+# MAGIC ###4 - Copy the YellowTaxisLargeAppend.csv file to the chapter03 sub-folder
+
+# COMMAND ----------
+
+# MAGIC %fs
+# MAGIC cp /mnt/datalake/book/DataFiles/YellowTaxisLargeAppend.csv /mnt/datalake/book/chapter03/YellowTaxisLargeAppend.csv
+
+# COMMAND ----------
+
+# MAGIC %md
 # MAGIC To do:
 # MAGIC 1. Make sure that we copy the taxi_rate_code.csv file into the right path

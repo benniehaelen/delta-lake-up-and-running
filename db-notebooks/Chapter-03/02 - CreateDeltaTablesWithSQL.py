@@ -131,41 +131,4 @@
 # MAGIC %sh
 # MAGIC # All managed tables will have their file stored under
 # MAGIC # the /user/hive/warehouse directory
-# MAGIC ls -al /dbfs/user/hive/warehouse/taxidb.db/ratecardManaged
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC #This is likely the end of this notebook, keeping the contents below temporary for reference
-# MAGIC ##Delete the contents below before final publication
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC CREATE TABLE IF NOT EXISTS delta.`/dluar/tables/rateCard_unmanaged`
-# MAGIC (
-# MAGIC     rateCodeId   INT,
-# MAGIC     rateCodeDesc STRING
-# MAGIC )
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC ####8 - Run a DESCRIBE on the taxidb database
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC DESCRIBE DATABASE taxidb;
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC USE taxidb;
-# MAGIC DESCRIBE TABLE rateCard;
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC USE taxidb;
-# MAGIC DESCRIBE TABLE EXTENDED rateCard;
+# MAGIC ls -al /dbfs/user/hive/warehouse/taxidb.db/ratecardmanaged

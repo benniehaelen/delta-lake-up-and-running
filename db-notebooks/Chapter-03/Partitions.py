@@ -51,8 +51,21 @@ input_df                                                               \
 
 # COMMAND ----------
 
+# MAGIC %sql
+# MAGIC select
+# MAGIC     VendorId,
+# MAGIC     count(*)
+# MAGIC FROM 
+# MAGIC     taxidb.yellowtaxis
+# MAGIC GROUP BY 
+# MAGIC     VendorId
+# MAGIC ORDER BY 
+# MAGIC     COUNT(*) DESC
+
+# COMMAND ----------
+
 # MAGIC %sh
-# MAGIC ls -al /dbfs/mnt/datalake/book/chapter03/YellowTaxisDeltaPartitioned/VendorId=1
+# MAGIC ls -al /dbfs/mnt/datalake/book/chapter03/YellowTaxisDeltaPartitioned/VendorId=4
 
 # COMMAND ----------
 
@@ -71,6 +84,10 @@ input_df                                                               \
 # MAGIC     taxidb.YellowTaxisPartitioned
 # MAGIC WHERE 
 # MAGIC     VendorId = 2
+
+# COMMAND ----------
+
+
 
 # COMMAND ----------
 
