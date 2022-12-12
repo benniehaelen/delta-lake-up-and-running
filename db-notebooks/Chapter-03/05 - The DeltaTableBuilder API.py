@@ -1,34 +1,28 @@
 # Databricks notebook source
-from delta.tables import *
+# MAGIC %md-sandbox
+# MAGIC <span><img src= "https://cdn.oreillystatic.com/images/sitewide-headers/oreilly_logo_mark_red.svg"/>&nbsp;&nbsp;<font size="16"><b>Delta Lake: Up and Running<b></font></span>
+# MAGIC 
+# MAGIC  
+# MAGIC  Name:          chapter 03/05 - The DeltaTableBuilder API
+# MAGIC  
+# MAGIC      Author:    Bennie Haelen
+# MAGIC      Date:      12-10-2022
+# MAGIC      Purpose:   The notebooks in this folder contains the code for chapter 3 of the book - Basic Operations on Delta Tables.
+# MAGIC                 This notebook illustrates how to use the powerful DeltaTableBuilder API to create Delta tables
+# MAGIC 
+# MAGIC                 
+# MAGIC      The following Delta Lake functionality is demonstrated in this notebook:
+# MAGIC        1 - Create a managed table with the DeltaTableBuilder API
+# MAGIC        2 - Use the DESCRIBE EXTENDED command to study the managed table
+# MAGIC        3 - Drop the table, so we can re-create it as an unmanaged table
+# MAGIC        4 - Create an unmanaged table with the DeltaTableBuilder API
+# MAGIC        5 - Use the DESCRIBE EXTENDED command to study to unmanaged table
+# MAGIC 
+# MAGIC    
 
 # COMMAND ----------
 
-# Create table in the metastore
-DeltaTable.createIfNotExists(spark) \
-  .tableName("default.people10m") \
-  .addColumn("id", "INT") \
-  .addColumn("firstName", "STRING") \
-  .addColumn("middleName", "STRING") \
-  .addColumn("lastName", "STRING", comment = "surname") \
-  .addColumn("gender", "STRING") \
-  .addColumn("birthDate", "TIMESTAMP") \
-  .addColumn("ssn", "STRING") \
-  .addColumn("salary", "INT") \
-  .execute()
-
-# Create or replace table with path and add properties
-DeltaTable.createOrReplace(spark) \
-  .addColumn("id", "INT") \
-  .addColumn("firstName", "STRING") \
-  .addColumn("middleName", "STRING") \
-  .addColumn("lastName", "STRING", comment = "surname") \
-  .addColumn("gender", "STRING") \
-  .addColumn("birthDate", "TIMESTAMP") \
-  .addColumn("ssn", "STRING") \
-  .addColumn("salary", "INT") \
-  .property("description", "table with people data") \
-  .location("/tmp/delta/people10m") \
-  .execute()
+from delta.tables import *
 
 # COMMAND ----------
 
@@ -43,7 +37,7 @@ DeltaTable.createOrReplace(spark) \
 # creating a MANAGED table
 #
 DeltaTable.createIfNotExists(spark)                              \
-    .tableName("taxidb.greentaxis")                             \
+    .tableName("taxidb.greenTaxis")                             \
     .addColumn("RideId", "INT", comment = "Primary Key")         \
     .addColumn("VendorId", "INT", comment = "Ride Vendor")       \
     .addColumn("EventType", "STRING")                            \
@@ -62,12 +56,22 @@ DeltaTable.createIfNotExists(spark)                              \
 
 # COMMAND ----------
 
-# DBTITLE 1,Detailed look at the created table
+# MAGIC %md
+# MAGIC ###2. Use the DESCRIBE EXTENDED command to look at the managed table created above
+
+# COMMAND ----------
+
+# DBTITLE 0,Detailed look at the created table
 # MAGIC %sql
 # MAGIC --
 # MAGIC -- Let's take a look at the table
 # MAGIC --
 # MAGIC DESCRIBE TABLE EXTENDED default.greentaxis 
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ###3. Drop the table, so we can re-create it as an unmanaged table
 
 # COMMAND ----------
 
@@ -77,7 +81,7 @@ DeltaTable.createIfNotExists(spark)                              \
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ###2. Create an unmanaged table using the DeltaTableBuilder API
+# MAGIC ###4. Create an unmanaged table using the DeltaTableBuilder API
 
 # COMMAND ----------
 
@@ -87,7 +91,7 @@ DeltaTable.createIfNotExists(spark)                              \
 # creating a UNMANAGED table
 #
 DeltaTable.createIfNotExists(spark)                              \
-    .tableName("taxidb.greentaxis")                              \
+    .tableName("taxidb.greenTaxis")                              \
     .addColumn("RideId", "INT", comment = "Primary Key")         \
     .addColumn("VendorId", "INT", comment = "Ride Vendor")       \
     .addColumn("EventType", "STRING")                            \
@@ -103,10 +107,15 @@ DeltaTable.createIfNotExists(spark)                              \
     .addColumn("TripDistance", "DOUBLE")                         \
     .addColumn("TotalAmount", "DOUBLE")                          \
     .property("description", "table with Green Taxi Data")       \
-    .location("/dluar/ch03/greentaxi")                           \
+    .location("/mnt/datalake/book/chapter03/greenTaxi")          \
     .execute()
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC ###5 - Use DESCRIBE EXTENDED to study the unmanaged taxidb.greenTaxis table
+
+# COMMAND ----------
+
 # MAGIC %sql
-# MAGIC DESCRIBE TABLE EXTENDED default.greentaxis
+# MAGIC DESCRIBE TABLE EXTENDED taxidb.greenTaxis

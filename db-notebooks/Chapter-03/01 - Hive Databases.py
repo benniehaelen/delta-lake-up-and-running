@@ -11,7 +11,7 @@
 # MAGIC                 This notebook illustrates interactions with the Hive Metastore
 # MAGIC 
 # MAGIC                 
-# MAGIC      Commands illustrated:
+# MAGIC      The following Delta Lake functionality is demonstrated in this notebook:
 # MAGIC        1 - Show all Hive databases
 # MAGIC        2 - Create a new Hive database
 # MAGIC    
