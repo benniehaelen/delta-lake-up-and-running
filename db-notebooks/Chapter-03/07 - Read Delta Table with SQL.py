@@ -15,6 +15,8 @@
 # MAGIC        1 - Create a Delta Table on top of a Delta File
 # MAGIC        2 - Perform a record count with SQL
 # MAGIC        3 - Perform a DESCRIBE FORMATTED listing of the Delta table
+# MAGIC        4 - Illustrate the use of ANSI SQL in a more advanced query
+# MAGIC        5 - Demonstrate the usage of Spark SQL in Python
 
 # COMMAND ----------
 
@@ -66,7 +68,13 @@
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC ###4 - Illustrate the use of ANSI SQL in a more advanced query
+
+# COMMAND ----------
+
 # MAGIC %sql
+# MAGIC -- Demonstrate the Spark SQL supports ANSI-SQL constructs
 # MAGIC SELECT 
 # MAGIC     CabNumber,
 # MAGIC     AVG(FareAmount) AS AverageFare
@@ -79,6 +87,11 @@
 # MAGIC ORDER BY
 # MAGIC     2 DESC
 # MAGIC LIMIT 5
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ###5 - Demonstrate the use of spark.sql in Python
 
 # COMMAND ----------
 
