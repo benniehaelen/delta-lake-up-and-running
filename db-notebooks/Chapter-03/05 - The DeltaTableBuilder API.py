@@ -37,7 +37,7 @@ from delta.tables import *
 # creating a MANAGED table
 #
 DeltaTable.createIfNotExists(spark)                              \
-    .tableName("taxidb.greenTaxis")                             \
+    .tableName("taxidb.greenTaxis")                              \
     .addColumn("RideId", "INT", comment = "Primary Key")         \
     .addColumn("VendorId", "INT", comment = "Ride Vendor")       \
     .addColumn("EventType", "STRING")                            \
