@@ -1,9 +1,10 @@
 # Databricks notebook source
 # MAGIC %md-sandbox
-# MAGIC <span><img src= "https://cdn.oreillystatic.com/images/sitewide-headers/oreilly_logo_mark_red.svg"/>&nbsp;&nbsp;<font size="16"><b>Delta Lake: Up and Running<b></font></span>
+# MAGIC <img src= "https://cdn.oreillystatic.com/images/sitewide-headers/oreilly_logo_mark_red.svg"/>&nbsp;&nbsp;<font size="16"><b>Delta Lake: Up and Running<b></font></span>
+# MAGIC <img style="float: left; margin: 0px 15px 15px 0px;" src="https://learning.oreilly.com/covers/urn:orm:book:9781098139711/400w/" />
 # MAGIC 
 # MAGIC  
-# MAGIC  Name:          chapter 03/04 - The DataFrameWriter API
+# MAGIC   Name:          chapter 03/04 - The DataFrameWriter API
 # MAGIC  
 # MAGIC      Author:    Bennie Haelen
 # MAGIC      Date:      12-10-2022
