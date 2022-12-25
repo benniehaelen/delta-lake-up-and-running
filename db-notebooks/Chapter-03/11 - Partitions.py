@@ -7,8 +7,8 @@
 # MAGIC  
 # MAGIC      Author:    Bennie Haelen
 # MAGIC      Date:      12-10-2022
-# MAGIC      Purpose:   The notebooks in this folder contains the code for chapter 3 of the book - Basic Operations on Delta Tables.
-# MAGIC                 This notebook illustrates how to write to partition a Delta Table
+# MAGIC      Purpose:   The notebooks in this folder contains the code for chapter 3 of the book - Table Deletes, Updates and Merges
+# MAGIC                 This notebook performs a number of Delete Operations
 # MAGIC 
 # MAGIC                 
 # MAGIC      The following Delta Lake functionality is demonstrated in this notebook:
