@@ -27,7 +27,7 @@
 
 # DBTITLE 0,Drop the taxidb database and all of its tables
 # MAGIC %sql
-# MAGIC drop database if exists taxidb cascade
+# MAGIC DROP DATABASE IF EXISTS taxidb CASCADE
 
 # COMMAND ----------
 
@@ -57,6 +57,7 @@
 # COMMAND ----------
 
 from pyspark.sql.types import (StructType,StructField,StringType,IntegerType,TimestampType,DoubleType,LongType)
+from pyspark.sql.functions import (to_date, year, month, dayofmonth)
 
 # define schema of data
 schema = schema = (
@@ -82,7 +83,7 @@ schema = schema = (
 )
 
 # read multiple years of parquet files
-years = [2021, 2020]
+years = [2022,2021, 2020]
 
 # create blank dataframe
 df = spark.createDataFrame(spark.sparkContext.emptyRDD(), schema)
@@ -95,32 +96,22 @@ for i in years:
         .schema(schema)
         .load(f"/mnt/datalake/book/chapter05/YellowTaxisParquet/{i}")
     )
-
-# write delta table
-df.write.format("delta").mode("overwrite").save(
-    "/mnt/datalake/book/chapter05/YellowTaxisDelta/"
+    
+# add date columns to dataframe
+df = (
+    df.withColumn("PickupDate", to_date("tpep_pickup_datetime"))
+    .withColumn("PickupYear", year('tpep_pickup_datetime'))
+    .withColumn("PickupMonth", month('tpep_pickup_datetime'))
+    .withColumn("PickupDay", dayofmonth('tpep_pickup_datetime'))
 )
 
-# COMMAND ----------
 
-#
-# insert monthly data from 2022 into the existing delta table.
-# 
+# define the path and how many partitions we want this file broken up into so we can demonstrate compaction
+path = "/mnt/datalake/book/chapter05/YellowTaxisDelta/"
+numberOfFiles = 200
 
-import os
-# get the list of all files and directories
-path = "/dbfs/mnt/datalake/book/chapter05/YellowTaxisParquet/2022"
-months = os.listdir(path)
-
-for i in months:
-    # read monthly parquet file
-    df = spark.read.format("parquet").schema(schema).load(
-        f"/mnt/datalake/book/chapter05/YellowTaxisParquet/2022/{i}"
-    )
-    # insert into existing delta table
-    df.write.format("delta").mode("append").save(
-        "/mnt/datalake/book/chapter05/YellowTaxisDelta/"
-    )
+# repartition dataframe and write delta table
+df.repartition(numberOfFiles).write.format("delta").mode("overwrite").save(path)
 
 # COMMAND ----------
 

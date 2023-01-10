@@ -4,14 +4,15 @@
 # MAGIC <img style="float: left; margin: 0px 15px 15px 0px;" src="https://learning.oreilly.com/covers/urn:orm:book:9781098139711/400w/" />  
 # MAGIC 
 # MAGIC  
-# MAGIC   Name:          chapter 05/01 - Chapter 5 Optimization
+# MAGIC   Name:          chapter 05/02 - Chapter 5 Optimization
 # MAGIC 
 # MAGIC      Purpose:   The notebooks in this folder contains the code for chapter 5 of the book - Performance Tuning.
 # MAGIC                 This notebook illustrates the OPTIMIZE command and its functionality.
 # MAGIC 
 # MAGIC                 
 # MAGIC      The following actions are taken in this notebook:
-# MAGIC        1 - Run OPTIMIZE on Delta Table
+# MAGIC        1 - Repartition the existing Delta Table to 200 files to enable demonstration of OPTIMIZE
+# MAGIC        2 - Run OPTIMIZE on Delta Table
 # MAGIC        2 - Run OPTIMIZE on the delta table again
 # MAGIC        3 - Add partition to the Delta Table and OPTIMIZE subset of data
 # MAGIC    
@@ -19,12 +20,36 @@
 # COMMAND ----------
 
 # MAGIC %md 
-# MAGIC ###1 - Run OPTIMIZE on Delta Table
+# MAGIC ###1 - Repartition the existing Delta Table to 200 files to enable demonstration of OPTIMIZE
+
+# COMMAND ----------
+
+# define the path and number of files to repartition
+path = "/mnt/datalake/book/chapter05/YellowTaxisDelta"
+numberOfFiles = 200
+
+# read the delta table and repartition it
+spark.read.format("delta").load(path).repartition(numberOfFiles)\
+ .write\
+ .option("dataChange", "false")\
+ .format("delta")\
+ .mode("overwrite")\
+ .save(path)
+
+# vaccum the table to remove unneccessrary files generated from the script db-notebooks/Chapter-05/02-Compaction
+# you will learn more about the vacuum command in chapter 6
+spark.sql('VACUUM taxidb.tripData')
+
+# COMMAND ----------
+
+# MAGIC %md 
+# MAGIC ###2 - Run OPTIMIZE on Delta Table
 
 # COMMAND ----------
 
 # DBTITLE 0,Drop the taxidb database and all of its tables
 # MAGIC %sql
+# MAGIC -- OPTIMIZE the Delta Table to demonstrate compaction
 # MAGIC OPTIMIZE taxidb.tripData
 
 # COMMAND ----------
@@ -51,21 +76,20 @@
 # MAGIC --to use as a partition
 # MAGIC REPLACE TABLE taxidb.tripData USING DELTA PARTITIONED BY (PickupYear) AS
 # MAGIC SELECT
-# MAGIC   *,
-# MAGIC   TO_DATE(tpep_pickup_datetime) AS PickupDate,
-# MAGIC   YEAR(tpep_pickup_datetime) AS PickupYear,
-# MAGIC   MONTH(tpep_pickup_datetime) AS PickupMonth,
-# MAGIC   DAY(tpep_pickup_datetime) AS PickupDay
+# MAGIC   *
 # MAGIC FROM
 # MAGIC   taxidb.tripData
 
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC --OPTIMIZE a specific subset of data
-# MAGIC OPTIMIZE taxidb.tripData WHERE PickupYear >= 2022
+# MAGIC --If you have a large amount of data and only want to optimize a subset of it, you can specify an optional partition predicate by using "where".
+# MAGIC --OPTIMIZE a specific subset of data using the query below
+# MAGIC OPTIMIZE taxidb.tripData WHERE PickupYear = 2022
 
 # COMMAND ----------
 
-# MAGIC %sql
-# MAGIC select count(*), pickupyear from taxidb.tripData group by PickupYear order by count(*) desc
+# MAGIC %sh
+# MAGIC grep PickupYear=2022/part-00001 
+# MAGIC /dbfs/mnt/datalake/book/chapter05/YellowTaxisDelta/_delta_log/00000000000000000007.json > /tmp/metadata.json
+# MAGIC python -m json.tool /tmp/metadata.json
