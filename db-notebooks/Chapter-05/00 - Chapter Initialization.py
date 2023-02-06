@@ -83,7 +83,7 @@ schema = schema = (
 )
 
 # read multiple years of parquet files
-years = [2022,2021, 2020]
+years = [2022,2021]
 
 # create blank dataframe
 df = spark.createDataFrame(spark.sparkContext.emptyRDD(), schema)
@@ -128,3 +128,8 @@ df.repartition(numberOfFiles).write.format("delta").mode("overwrite").save(path)
 # MAGIC %sql
 # MAGIC CREATE TABLE IF NOT EXISTS taxidb.tripData
 # MAGIC USING DELTA LOCATION '/mnt/datalake/book/chapter05/YellowTaxisDelta';
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC select * from taxidb.tripData
