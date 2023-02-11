@@ -127,7 +127,7 @@ spark.sql('VACUUM taxidb.tripData')
 # MAGIC FROM
 # MAGIC   taxidb.tripData
 # MAGIC WHERE
-# MAGIC   PickupDate IN ('2022-01-01', '2021-01-01')
+# MAGIC   PickupDate BETWEEN '2022-01-01' AND '2022-03-31'
 # MAGIC GROUP BY
 # MAGIC   PickupDate
 
@@ -158,7 +158,7 @@ spark.sql('VACUUM taxidb.tripData')
 # MAGIC FROM
 # MAGIC   taxidb.tripData
 # MAGIC WHERE
-# MAGIC   PickupDate IN ('2021-01-01', '2022-01-01')
+# MAGIC   PickupDate BETWEEN '2022-01-01' AND '2022-03-31'
 # MAGIC GROUP BY
 # MAGIC   PickupDate
 
