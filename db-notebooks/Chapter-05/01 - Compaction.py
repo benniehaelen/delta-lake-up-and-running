@@ -27,7 +27,10 @@ path = "/mnt/datalake/book/chapter05/YellowTaxisDelta"
 numberOfFiles = 5
 
 # read the delta table and repartition it 
-spark.read.format("delta").load(path).repartition(numberOfFiles)\
+spark.read\
+ .format("delta")\
+ .load(path)\
+ .repartition(numberOfFiles)\
  .write\
  .option("dataChange", "false")\
  .format("delta")\

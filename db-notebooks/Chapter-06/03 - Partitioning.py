@@ -4,42 +4,33 @@
 # MAGIC <img style="float: left; margin: 0px 15px 15px 0px;" src="https://learning.oreilly.com/covers/urn:orm:book:9781098139711/400w/" />  
 # MAGIC 
 # MAGIC  
-# MAGIC   Name:          chapter 05/03 - Chapter 5 Optimization
+# MAGIC   Name:          chapter 05/02 - Chapter 5 Optimization
 # MAGIC 
 # MAGIC      Purpose:   The notebooks in this folder contains the code for chapter 5 of the book - Performance Tuning.
-# MAGIC                 This notebook illustrates partitioning.
+# MAGIC                 This notebook illustrates the OPTIMIZE and Z-Order command, and data skipping.
 # MAGIC 
 # MAGIC                 
 # MAGIC      The following actions are taken in this notebook:
-# MAGIC        1 - Remove existing Delta table directory to remove all old files
-# MAGIC        2 - Create a partitioned Delta Table
-# MAGIC        3 - Update specified partitions
+# MAGIC        1 - Repartition the existing Delta Table to 200 files to enable demonstration of OPTIMIZE
+# MAGIC        2 - Run OPTIMIZE on Delta Table
+# MAGIC        2 - Run OPTIMIZE on the delta table again
+# MAGIC        3 - Add partition to the Delta Table and OPTIMIZE subset of data
 # MAGIC    
 
 # COMMAND ----------
 
 # MAGIC %md 
-# MAGIC ###Step 1 - Remove existing Delta table directory to remove all old files
+# MAGIC ###Step 1 - Create a partitioned Delta Table
 
 # COMMAND ----------
 
-# MAGIC %fs
-# MAGIC rm -r /mnt/datalake/book/chapter05/YellowTaxisDelta/
-
-# COMMAND ----------
-
-# MAGIC %md 
-# MAGIC ###Step 2 - Create a partitioned Delta Table
-
-# COMMAND ----------
-
-# DBTITLE 1,Create a partitioned Delta Table
 # import month from sql functions
 from pyspark.sql.functions import (month, to_date)
 
+
 # define the source path and destination path
 source_path = "/mnt/datalake/book/chapter05/YellowTaxisParquet/2021"
-destination_path = "/mnt/datalake/book/chapter05/YellowTaxisDelta/"
+destination_path = "/mnt/datalake/book/chapter05/YellowTaxisDeltaPartitioned/"
 
 # read the delta table, add columns to partitions on, and write it using a partition.
 # make sure to overwrite the existing schema if the table already exists since we are adding partitions
@@ -56,14 +47,6 @@ spark.read.format("parquet")\
 
 # COMMAND ----------
 
-# DBTITLE 1,List partitions for the table
-# MAGIC %sql
-# MAGIC --list all partitions for the table
-# MAGIC SHOW PARTITIONS taxidb.tripData
-
-# COMMAND ----------
-
-# DBTITLE 1,Show partitions in the underlying file system
 # import OS module
 import os
 
@@ -72,14 +55,9 @@ print(os.listdir('/dbfs/'+destination_path))
 
 # COMMAND ----------
 
-# MAGIC %md 
-# MAGIC ###Step 3 - Update specified partitions
-
-# COMMAND ----------
-
 # DBTITLE 1,Use replaceWhere to update a specified partition
 # import month from sql functions
-from pyspark.sql.functions import (lit, col)
+from pyspark.sql.functions import (lit)
 from pyspark.sql.types import (LongType)
 
 spark.read                                                              \
@@ -89,26 +67,11 @@ spark.read                                                              \
     .withColumn("payment_type", lit(4).cast(LongType()))                \
     .write                                                              \
     .format("delta")                                                    \
-    .option("replaceWhere", "PickupMonth = '12'")    \
+    .option("replaceWhere", "PickupMonth = 12 AND payment_type = 3")    \
     .mode("overwrite")                                                  \
     .save(destination_path)
 
 # COMMAND ----------
 
-# DBTITLE 1,Perform compaction on a specified partition
-# read a partition from the delta table and repartition it 
-spark.read.format("delta")          \
-.load(path)                         \
-.where((col("PickupMonth") = '12')  \ 
-.repartition(5)                     \
-.write                              \
-.option("dataChange", "false")      \
-.format("delta")                    \
-.mode("overwrite")                  \
-.save(destination_path)
-
-# COMMAND ----------
-
-# DBTITLE 1,Optimize and ZORDER BY on a specified partition
 # MAGIC %sql
-# MAGIC OPTIMIZE taxidb.tripData WHERE PickupMonth = 12 ZORDER BY tpep_pickup_datetime
+# MAGIC OPTIMIZE '/mnt/datalake/book/chapter05/YellowTaxisDeltaPartitioned/' ZORDER BY tpep_pickup_datetime WHERE PickupMonth = 12
