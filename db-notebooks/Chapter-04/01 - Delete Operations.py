@@ -54,7 +54,7 @@
 # COMMAND ----------
 
 # MAGIC %sh
-# MAGIC grep "add" /dbfs/mnt/datalake/book/chapter04/YellowTaxisDelta/_delta_log/00000000000000000000.json | sed -n 1p > /tmp/commit.json
+# MAGIC grep \"add\" /dbfs/mnt/datalake/book/chapter04/YellowTaxisDelta/_delta_log/00000000000000000000.json | sed -n 1p > /tmp/commit.json
 # MAGIC python -m json.tool < /tmp/commit.json
 
 # COMMAND ----------

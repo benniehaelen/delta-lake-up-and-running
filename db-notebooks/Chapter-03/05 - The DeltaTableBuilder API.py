@@ -67,7 +67,7 @@ DeltaTable.createIfNotExists(spark)                              \
 # MAGIC --
 # MAGIC -- Let's take a look at the table
 # MAGIC --
-# MAGIC DESCRIBE TABLE EXTENDED default.greentaxis 
+# MAGIC DESCRIBE TABLE EXTENDED taxidb.greentaxis 
 
 # COMMAND ----------
 

@@ -111,36 +111,19 @@ df_rate_codes.write.format("delta").saveAsTable('taxidb.rateCard')
 
 # COMMAND ----------
 
-# Next, write out the data frame to our Data Lake Path, 
-# this will create our Delta Files in that location
-df_rate_codes                     \
-        .write                    \
-        .format("delta")          \
-        .mode("overwrite")        \
-        .save(DELTALAKE_PATH)
+# Next, create our Delta Table, specifying both 
+# the path and the Delta Table Name
+df_rate_codes                           \
+        .write                          \
+        .format("delta")                \
+        .mode("overwrite")              \
+        .option('path', DELTALAKE_PATH) \
+        .saveAsTable('taxidb.rateCard')
 
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ###8 - Create an unmanaged Delta Table on top of the Delta File
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC -- Finally, you create an unmanaged table on top of the Data Lake Path
-# MAGIC -- Because we are specifying a LOCATION we know this is an unmanaged
-# MAGIC -- table
-# MAGIC CREATE OR REPLACE TABLE taxidb.rateCard
-# MAGIC (
-# MAGIC     RateCodeID   INT,
-# MAGIC     RateCodeDesc STRING
-# MAGIC )
-# MAGIC LOCATION 'dbfs:/mnt/datalake/book/chapter03/createDeltaTableWithDataFrameWriter'
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC ###9 - Display the records in the table
+# MAGIC ###8 - Display the records in the table
 
 # COMMAND ----------
 

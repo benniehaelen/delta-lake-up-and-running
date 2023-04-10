@@ -24,23 +24,44 @@
 
 # COMMAND ----------
 
+
+
+# COMMAND ----------
+
+
+
+# COMMAND ----------
+
+
+
+# COMMAND ----------
+
 # MAGIC %md
-# MAGIC ###1 - Create an unmanaged Delta table with SQL
+# MAGIC ###1 - Create a Delta table using the file_format`path_to_table` specification
 
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC -- Create the unmanaged taxidb.rateCard table. We know that the 
-# MAGIC -- table is unmanaged, because we are specifying the location
-# MAGIC -- in the data lake. Notice the USING DELTA data source file format 
-# MAGIC -- specification, qualifying this as a Delta table
+# MAGIC -- Create a Delta table by specifying the delta format, followed
+# MAGIC -- by the path in quotes
+# MAGIC CREATE TABLE IF NOT EXISTS delta.`/mnt/datalake/book/chapter03/rateCard`
+# MAGIC (
+# MAGIC     rateCodeId   INT,
+# MAGIC     rateCodeDesc STRING
+# MAGIC )
+# MAGIC USING DELTA
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC -- Create the table using the taxidb catalog
 # MAGIC CREATE TABLE IF NOT EXISTS taxidb.rateCard
 # MAGIC (
 # MAGIC     rateCodeId   INT,
 # MAGIC     rateCodeDesc STRING
 # MAGIC )
 # MAGIC USING DELTA
-# MAGIC LOCATION '/mnt/datalake/book/chapter03/rateCard';
+# MAGIC LOCATION '/mnt/datalake/book/chapter03/rateCard'
 
 # COMMAND ----------
 
@@ -108,6 +129,7 @@
 
 # MAGIC %md
 # MAGIC ###6 - Created a new Managed table
+# MAGIC (potentially remove)
 
 # COMMAND ----------
 
@@ -126,6 +148,7 @@
 
 # MAGIC %md
 # MAGIC ###7 - Show a directory listing of the managed table
+# MAGIC (potentially remove)
 
 # COMMAND ----------
 

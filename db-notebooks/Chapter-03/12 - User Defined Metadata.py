@@ -25,6 +25,10 @@ from delta.tables import *
 
 # COMMAND ----------
 
+spark.sparkContext
+
+# COMMAND ----------
+
 # MAGIC %sql
 # MAGIC SET spark.databricks.delta.commitInfo.userMetadata=my-custom-metadata= { "GDPR": "INSERT Request 1x965383" };
 # MAGIC 
@@ -40,6 +44,11 @@ from delta.tables import *
 # MAGIC         '2019-11-01T00:02:23.573Z', 65, 71, 'TAC304',
 # MAGIC         '453987', 2, 4.5, 1, 1, 20.34, 15.0, 0.5, 
 # MAGIC         0.4, 2.0, 2.0, 1.1)
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC SET spark.databricks.delta.commitInfo.userMetadata;
 
 # COMMAND ----------
 
@@ -59,7 +68,7 @@ from delta.tables import *
 # COMMAND ----------
 
 # MAGIC %sh
-# MAGIC grep commit /dbfs/mnt/datalake/book/chapter03/YellowTaxisDeltaPartitioned/_delta_log/00000000000000000004.json > /tmp/commit.json
+# MAGIC grep commit /dbfs/mnt/datalake/book/chapter03/YellowTaxisDeltaPartitioned/_delta_log/00000000000000000006.json > /tmp/commit.json
 # MAGIC python -m json.tool /tmp/commit.json
 
 # COMMAND ----------
