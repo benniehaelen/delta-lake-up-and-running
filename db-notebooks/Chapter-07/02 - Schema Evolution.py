@@ -2,16 +2,16 @@
 # MAGIC %md-sandbox
 # MAGIC <img src= "https://cdn.oreillystatic.com/images/sitewide-headers/oreilly_logo_mark_red.svg"/>&nbsp;&nbsp;<font size="16"><b>Delta Lake: Up and Running<b></font></span>
 # MAGIC <img style="float: left; margin: 0px 15px 15px 0px;" src="https://learning.oreilly.com/covers/urn:orm:book:9781098139711/400w/" />  
-# MAGIC 
+# MAGIC
 # MAGIC  
 # MAGIC   Name:          chapter 07/00 - Chapter Initialization
-# MAGIC 
+# MAGIC
 # MAGIC      Author:    Bennie Haelen
 # MAGIC      Date:      12-10-2022
 # MAGIC      Purpose:   The notebooks in this folder contains the code for chapter 7 of the book - Updating and Modifying Table Schema
 # MAGIC                 This notebook handles the use cases for schema evolution
 # MAGIC                 
-# MAGIC 
+# MAGIC
 # MAGIC                 
 # MAGIC      The following actions are taken in this notebook:
 # MAGIC        1 - Verify that the autoMerge setting for the cluster is set to false
@@ -309,67 +309,3 @@ df.printSchema()
 # MAGIC   RateCodeDesc
 # MAGIC FROM
 # MAGIC   delta.`/mnt/datalake/book/chapter07/TaxiRateCode.delta`
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC ###Case 4 - Adding a comment
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC -- Re-create YellowTaxis as an unmanaged table
-# MAGIC CREATE TABLE taxidb.TaxiRateCode
-# MAGIC (
-# MAGIC     RateCodeId              INT,
-# MAGIC     RateCodeDesc            STRING
-# MAGIC     
-# MAGIC ) USING DELTA         
-# MAGIC LOCATION "/mnt/datalake/book/chapter07/TaxiRateCode.delta";
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC ALTER TABLE taxidb.TaxiRateCode
-# MAGIC ALTER COLUMN RateCodeId COMMENT 'This is the published rate code ID';
-
-# COMMAND ----------
-
-# MAGIC %sh
-# MAGIC ls -al /dbfs/mnt/datalake/book/chapter07/TaxiRateCode.delta/_delta_log/*.json
-
-# COMMAND ----------
-
-# MAGIC %sh
-# MAGIC cat /dbfs/mnt/datalake/book/chapter07/TaxiRateCode.delta/_delta_log/00000000000000000002.json 
-
-# COMMAND ----------
-
-# Define the schema for the DataFrame
-schema = StructType([
-    StructField("RateCodeId", IntegerType(), True),
-    StructField("RateCodeDesc", StringType(), True)
-])
-
-# Create a list of rows for the DataFrame
-data = [
-    (30, "Rate Code 30"), 
-    (31, "Rate Code 31"), 
-    (32, "Rate Code 32")
-]
-
-# Create a DataFrame from the list of rows and the schema
-df = spark.createDataFrame(data, schema)
-
-df.write                         \
-  .format("delta")               \
-  .option("mergeSchema", "true") \
-  .mode("append")                \
-  .save("/mnt/datalake/book/chapter07/TaxiRateCode.delta")
-
-df.printSchema()
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC SELECT * FROM taxidb.taxiratecode order by RateCodeId

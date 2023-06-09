@@ -2,20 +2,25 @@
 # MAGIC %md-sandbox
 # MAGIC <img src= "https://cdn.oreillystatic.com/images/sitewide-headers/oreilly_logo_mark_red.svg"/>&nbsp;&nbsp;<font size="16"><b>Delta Lake: Up and Running<b></font></span>
 # MAGIC <img style="float: left; margin: 0px 15px 15px 0px;" src="https://learning.oreilly.com/covers/urn:orm:book:9781098139711/400w/" />  
-# MAGIC 
+# MAGIC
 # MAGIC  
 # MAGIC   Name:          chapter 07/00 - Chapter Initialization
-# MAGIC 
+# MAGIC
 # MAGIC      Author:    Bennie Haelen
 # MAGIC      Date:      12-10-2022
 # MAGIC      Purpose:   The notebooks in this folder contains the code for chapter 7 of the book - Updating and Modifying Table Schema
 # MAGIC                 This notebook covers explicit schema updates
-# MAGIC 
+# MAGIC
 # MAGIC                 
 # MAGIC      The following actions are taken in this notebook:
 # MAGIC        1 - Drop the taxidb database with a cascade, deleting all tables in the database
 # MAGIC        2 - ...
 # MAGIC    
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ###Step 1 - Reset the TaxiRateCode Delta Table
 
 # COMMAND ----------
 
@@ -33,10 +38,12 @@ from pyspark.sql.functions import col, cast
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC DROP TABLE IF EXISTS taxidb.TaxiRateCodes
+# MAGIC drop table taxidb.taxiratecode
 
 # COMMAND ----------
 
+# Read the .CSV file, make sure that we use an integer
+# for the RateCodeId
 df = spark.read.format("csv")      \
         .option("header", "true") \
         .load("/mnt/datalake/book/chapter07/TaxiRateCode.csv")
@@ -52,13 +59,12 @@ df.printSchema()
 
 # COMMAND ----------
 
-# MAGIC %sql
-# MAGIC DROP TABLE IF EXISTS taxidb.TaxiRateCode
+df.show()
 
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC -- Re-create YellowTaxis as an unmanaged table
+# MAGIC -- Replace the TaxiRateCode table
 # MAGIC CREATE TABLE taxidb.TaxiRateCode
 # MAGIC (
 # MAGIC     RateCodeId              INT,
@@ -66,23 +72,23 @@ df.printSchema()
 # MAGIC     
 # MAGIC ) USING DELTA         
 # MAGIC LOCATION "/mnt/datalake/book/chapter07/TaxiRateCode.delta";
-# MAGIC 
-# MAGIC -- ALTER TABLE taxidb.YellowTaxis
-# MAGIC -- ALTER COLUMN RideId COMMENT 'This is the id of the Ride';
 
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC SELECT * FROM taxidb.TaxiRateCode
+# MAGIC -- Perform a SELECT, verify that we are indeed starting with our default 
+# MAGIC -- 6 records
+# MAGIC select * from taxidb.TaxiRateCode
 
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ###Case 1 - Add Column
+# MAGIC ###Step 2 - Add Column (Use Case 1)
 
 # COMMAND ----------
 
 # MAGIC %sql
+# MAGIC -- Add a new column after the RateCodeId
 # MAGIC ALTER TABLE delta.`/mnt/datalake/book/chapter07/TaxiRateCode.delta`
 # MAGIC ADD COLUMN RateCodeTaxPercent INT AFTER RateCodeId
 
@@ -94,12 +100,13 @@ df.printSchema()
 # COMMAND ----------
 
 # MAGIC %sql
+# MAGIC -- Show that the values for the new columns are NULL, as expected
 # MAGIC select * from delta.`/mnt/datalake/book/chapter07/TaxiRateCode.delta`
 
 # COMMAND ----------
 
 # MAGIC %sh
-# MAGIC ls -al /dbfs//mnt/datalake/book/chapter07/TaxiRateCode.delta/_delta_log
+# MAGIC ls -al /dbfs//mnt/datalake/book/chapter07/TaxiRateCode.delta/_delta_log/*.json
 
 # COMMAND ----------
 
@@ -108,8 +115,13 @@ df.printSchema()
 
 # COMMAND ----------
 
+# MAGIC %sql
+# MAGIC describe HISTORY taxidb.taxiratecode
+
+# COMMAND ----------
+
 # MAGIC %md
-# MAGIC ###Case 2 - Add Comments
+# MAGIC ###Step 3 - Add a Comment to a Column (Use Case 2)
 
 # COMMAND ----------
 
@@ -145,7 +157,7 @@ df.printSchema()
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ###Case 3 - Reorder Columns
+# MAGIC ###Step 4 - Reorder Columns (Use Case 3)
 
 # COMMAND ----------
 
@@ -169,8 +181,18 @@ df.printSchema()
 
 # COMMAND ----------
 
+# MAGIC %sh
+# MAGIC ls -al /dbfs/mnt/datalake/book/chapter07/TaxiRateCode.delta/_delta_log/*.json
+
+# COMMAND ----------
+
+# MAGIC %sh
+# MAGIC cat /dbfs/mnt/datalake/book/chapter07/TaxiRateCode.delta/_delta_log/00000000000000000003.json
+
+# COMMAND ----------
+
 # MAGIC %md
-# MAGIC ###Case 4 - Setup Column Mapping
+# MAGIC ###Step 5 - Setup Column Mapping
 
 # COMMAND ----------
 
@@ -180,6 +202,16 @@ df.printSchema()
 # MAGIC     'delta.minWriterVersion' = '5',
 # MAGIC     'delta.columnMapping.mode' = 'name'
 # MAGIC   )
+
+# COMMAND ----------
+
+# MAGIC %sh
+# MAGIC ls -al /dbfs/mnt/datalake/book/chapter07/TaxiRateCode.delta/_delta_log/*.json
+
+# COMMAND ----------
+
+# MAGIC %sh
+# MAGIC cat /dbfs/mnt/datalake/book/chapter07/TaxiRateCode.delta/_delta_log/00000000000000000004.json
 
 # COMMAND ----------
 
@@ -194,7 +226,29 @@ df.printSchema()
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ###Case 5 - REPLACE COLUMNS
+# MAGIC ###Step 6 - Rename a Column (Use case 4)
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC -- Perform our column rename
+# MAGIC ALTER TABLE taxidb.taxiratecode RENAME COLUMN RateCodeDesc to RateCodeDescription
+
+# COMMAND ----------
+
+# MAGIC %sh
+# MAGIC ls -al /dbfs/mnt/datalake/book/chapter07/TaxiRateCode.delta/_delta_log/*.json
+
+# COMMAND ----------
+
+# MAGIC %sh
+# MAGIC # Look at the corresponding log entry
+# MAGIC cat /dbfs/mnt/datalake/book/chapter07/TaxiRateCode.delta/_delta_log/00000000000000000005.json
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ###Step 7 - REPLACE COLUMNS (Use Case 5)
 
 # COMMAND ----------
 
@@ -205,6 +259,32 @@ df.printSchema()
 # MAGIC   Rate_Code_Description STRING COMMENT 'Describes the code',
 # MAGIC   Rate_Code_Percentage  INT    COMMENT 'Tax percentage applied'
 # MAGIC )
+
+# COMMAND ----------
+
+# MAGIC %sh
+# MAGIC ls -al /dbfs/mnt/datalake/book/chapter07/TaxiRateCode.delta/_delta_log/*.json
+
+# COMMAND ----------
+
+# MAGIC %sh
+# MAGIC cat /dbfs/mnt/datalake/book/chapter07/TaxiRateCode.delta/_delta_log/00000000000000000006.json
+# MAGIC  
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC SELECT * FROM taxidb.TaxiRateCode 
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC DESCRIBE HISTORY taxidb.TaxiRateCode 
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC select * from taxidb.taxiratecode
 
 # COMMAND ----------
 
