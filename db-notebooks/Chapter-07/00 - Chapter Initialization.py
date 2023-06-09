@@ -2,17 +2,17 @@
 # MAGIC %md-sandbox
 # MAGIC <img src= "https://cdn.oreillystatic.com/images/sitewide-headers/oreilly_logo_mark_red.svg"/>&nbsp;&nbsp;<font size="16"><b>Delta Lake: Up and Running<b></font></span>
 # MAGIC <img style="float: left; margin: 0px 15px 15px 0px;" src="https://learning.oreilly.com/covers/urn:orm:book:9781098139711/400w/" />  
-# MAGIC 
+# MAGIC
 # MAGIC  
 # MAGIC   Name:          chapter 07/00 - Chapter Initialization
-# MAGIC 
+# MAGIC
 # MAGIC      Author:    Bennie Haelen
 # MAGIC      Date:      12-10-2022
 # MAGIC      Purpose:   The notebooks in this folder contains the initialization code for chapter 7 of the 
 # MAGIC                 book - Updating and Modifying Table Schema
 # MAGIC                 This notebook resets all Hive databases and data files, so that we can successfully 
 # MAGIC                 execute all notebooks in this chapter in sequence
-# MAGIC 
+# MAGIC
 # MAGIC                 
 # MAGIC      The following actions are taken in this notebook:
 # MAGIC        1 - Drop the taxidb database with a cascade, deleting all tables in the database
@@ -116,9 +116,10 @@ df.printSchema()
 # MAGIC     
 # MAGIC ) USING DELTA         
 # MAGIC LOCATION "/mnt/datalake/book/chapter07/TaxiRateCode.delta";
-# MAGIC 
+# MAGIC
 # MAGIC -- ALTER TABLE taxidb.YellowTaxis
 # MAGIC -- ALTER COLUMN RideId COMMENT 'This is the id of the Ride';
+# MAGIC
 
 # COMMAND ----------
 
