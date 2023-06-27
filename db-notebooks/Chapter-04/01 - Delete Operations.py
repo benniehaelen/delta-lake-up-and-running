@@ -2,16 +2,16 @@
 # MAGIC %md-sandbox
 # MAGIC <img src= "https://cdn.oreillystatic.com/images/sitewide-headers/oreilly_logo_mark_red.svg"/>&nbsp;&nbsp;<font size="16"><b>Delta Lake: Up and Running<b></font></span>
 # MAGIC <img style="float: left; margin: 0px 15px 15px 0px;" src="https://learning.oreilly.com/covers/urn:orm:book:9781098139711/400w/" />  
-# MAGIC 
+# MAGIC
 # MAGIC  
 # MAGIC Name:          chapter 04/01 - Delete Operations
-# MAGIC 
+# MAGIC
 # MAGIC      Author:    Bennie Haelen
 # MAGIC      Date:      12-10-2022
 # MAGIC      Purpose:   The notebooks in this folder contains the code for chapter 4 of the book - Basic Operations on Delta Tables.
 # MAGIC                 This notebook executes a DELETE operation and shows the impact on the Parquet part files and the details
 # MAGIC                 of what is happening in the transaction log.
-# MAGIC 
+# MAGIC
 # MAGIC                 
 # MAGIC      The following actions are taken in this notebook:
 # MAGIC        1 - Perform a DESCRIBE HISTORY on the Starting Table
@@ -23,7 +23,7 @@
 # MAGIC        7 - Use DESCRIBE HISTORY to look at the DELETE operation
 # MAGIC        8 - Search the transaction log entry for the "Add File" and "Remove File" actions
 # MAGIC        9 - Perform a directory listing to confirm the parquet part files
-# MAGIC 
+# MAGIC
 # MAGIC    
 
 # COMMAND ----------
@@ -96,6 +96,7 @@
 # MAGIC     taxidb.YellowTaxis
 # MAGIC WHERE   
 # MAGIC     RideId = 100000
+# MAGIC
 
 # COMMAND ----------
 
@@ -144,6 +145,7 @@
 # MAGIC %sh
 # MAGIC grep "add" /dbfs/mnt/datalake/book/chapter04/YellowTaxisDelta/_delta_log/00000000000000000001.json > /tmp/commit.json
 # MAGIC python -m json.tool < /tmp/commit.json
+# MAGIC
 
 # COMMAND ----------
 
@@ -160,3 +162,4 @@
 
 # MAGIC %sh
 # MAGIC ls -al /dbfs/mnt/datalake/book/chapter04/YellowTaxisDelta/
+# MAGIC

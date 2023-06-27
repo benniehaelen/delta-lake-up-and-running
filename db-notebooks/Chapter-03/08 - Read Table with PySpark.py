@@ -2,20 +2,21 @@
 # MAGIC %md-sandbox
 # MAGIC <img src= "https://cdn.oreillystatic.com/images/sitewide-headers/oreilly_logo_mark_red.svg"/>&nbsp;&nbsp;<font size="16"><b>Delta Lake: Up and Running<b></font></span>
 # MAGIC <img style="float: left; margin: 0px 15px 15px 0px;" src="https://learning.oreilly.com/covers/urn:orm:book:9781098139711/400w/" />   
-# MAGIC 
+# MAGIC
 # MAGIC  Name:          chapter 03/08 - Read Table with PySpark
 # MAGIC  
 # MAGIC      Author:    Bennie Haelen
 # MAGIC      Date:      12-10-2022
 # MAGIC      Purpose:   The notebooks in this folder contains the code for chapter 3 of the book - Basic Operations on Delta Tables.
 # MAGIC                 This notebook illustrates how to read a table using PySpark
-# MAGIC 
+# MAGIC
 # MAGIC                 
 # MAGIC      The following Delta Lake functionality is demonstrated in this notebook:
 # MAGIC        1 - Using pySpark to get a record count of a Delta Table
 # MAGIC        2 - Run a complex query in PySpark
 # MAGIC        3 - Illustrate that .groupBy() creates a pyspark.sql.GroupedDate instance
 # MAGIC            and not a DataFrame
+# MAGIC
 
 # COMMAND ----------
 

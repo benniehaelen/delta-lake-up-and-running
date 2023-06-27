@@ -186,6 +186,11 @@
 # COMMAND ----------
 
 # MAGIC %sh
+# MAGIC rm -r /dbfs/mnt/datalake/book/chapter08/CDCEval/
+
+# COMMAND ----------
+
+# MAGIC %sh
 # MAGIC mkdir /dbfs/mnt/datalake/book/chapter08/CDCEval/
 
 # COMMAND ----------
@@ -200,8 +205,8 @@
 
 # COMMAND ----------
 
-cdc_df1 = spark.read.parquet("/mnt/datalake/book/chapter08/CDCEval/cdc-00000-53fd9a20-f1aa-44cf-8992-ef6ee3c77b7c.c000.snappy.parquet")
-cdc_df2 = spark.read.parquet("/mnt/datalake/book/chapter08/CDCEval/cdc-00001-3d4e2227-0730-4a70-bdfc-ade83a1bad95.c000.snappy.parquet")
+cdc_df1 = spark.read.parquet("/mnt/datalake/book/chapter08/CDCEval/cdc-00000-6e84fbeb-a4dc-475b-b412-8d095840e817.c000.snappy.parquet")
+cdc_df2 = spark.read.parquet("/mnt/datalake/book/chapter08/CDCEval/cdc-00001-6bdbe422-a8b3-4761-9b3a-b28f2266ac53.c000.snappy.parquet")
 cdc_df = cdc_df1.union(cdc_df2)
 cdc_df.display()
 

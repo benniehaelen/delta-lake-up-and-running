@@ -2,14 +2,14 @@
 # MAGIC %md-sandbox
 # MAGIC <img src= "https://cdn.oreillystatic.com/images/sitewide-headers/oreilly_logo_mark_red.svg"/>&nbsp;&nbsp;<font size="16"><b>Delta Lake: Up and Running<b></font></span>
 # MAGIC <img style="float: left; margin: 0px 15px 15px 0px;" src="https://learning.oreilly.com/covers/urn:orm:book:9781098139711/400w/" />   
-# MAGIC 
+# MAGIC
 # MAGIC  Name:          chapter 03/10 - Writing to a Delta Table
 # MAGIC  
 # MAGIC      Author:    Bennie Haelen
 # MAGIC      Date:      12-10-2022
 # MAGIC      Purpose:   The notebooks in this folder contains the code for chapter 3 of the book - Basic Operations on Delta Tables.
 # MAGIC                 This notebook illustrates how to write to a Delta Table with both SQL and PySpark
-# MAGIC 
+# MAGIC
 # MAGIC                 
 # MAGIC      The following Delta Lake functionality is demonstrated in this notebook:
 # MAGIC        1 - Drop the YellowTaxis Delta Table and delete its Delta Files.
@@ -20,6 +20,7 @@
 # MAGIC        6 - Load a DataFrame from a CSV file, specifying the table schema
 # MAGIC        7 - Append this DataFrame to our YellowTaxis Delta Table
 # MAGIC        8 - Use Copy Into to append the contents of a large .CSV file into our Delta Table
+# MAGIC
 
 # COMMAND ----------
 
@@ -89,7 +90,7 @@
 # MAGIC  RatecodeId, PaymentType, TotalAmount,
 # MAGIC  FareAmount, Extra, MtaTax, TipAmount, 
 # MAGIC  TollsAmount, ImprovementSurcharge)
-# MAGIC 
+# MAGIC
 # MAGIC  VALUES(9999995, 1, '2019-11-01T00:00:00.000Z', 
 # MAGIC         '2019-11-01T00:02:23.573Z', 65, 71, 'TAC304',
 # MAGIC         '453987', 2, 4.5, 1, 1, 20.34, 15.0, 0.5, 
@@ -190,7 +191,7 @@ df_for_append.write                     \
 # MAGIC              
 # MAGIC         FROM '/mnt/datalake/book/chapter03/YellowTaxisLargeAppend.csv' 
 # MAGIC )
-# MAGIC 
+# MAGIC
 # MAGIC FILEFORMAT = CSV
 # MAGIC FORMAT_OPTIONS ("header" = "true")
 
@@ -229,7 +230,7 @@ df_for_append.write                     \
 # MAGIC              
 # MAGIC         FROM '/mnt/datalake/book/chapter03/YellowTaxisLargeAppend.csv' 
 # MAGIC )
-# MAGIC 
+# MAGIC
 # MAGIC FILEFORMAT = CSV
 # MAGIC FORMAT_OPTIONS ("header" = "true")
 
@@ -248,6 +249,6 @@ df_for_append.write                     \
 
 # COMMAND ----------
 
-# MAGIC 
+# MAGIC
 # MAGIC %fs
 # MAGIC ls /mnt/datalake/book/DataFiles

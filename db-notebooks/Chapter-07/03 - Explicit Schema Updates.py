@@ -72,6 +72,7 @@ df.show()
 # MAGIC     
 # MAGIC ) USING DELTA         
 # MAGIC LOCATION "/mnt/datalake/book/chapter07/TaxiRateCode.delta";
+# MAGIC
 
 # COMMAND ----------
 
@@ -112,6 +113,7 @@ df.show()
 
 # MAGIC %sh
 # MAGIC cat /dbfs/mnt/datalake/book/chapter07/TaxiRateCode.delta/_delta_log/00000000000000000001.json 
+# MAGIC
 
 # COMMAND ----------
 
