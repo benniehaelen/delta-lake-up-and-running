@@ -2,7 +2,7 @@
 # MAGIC %md-sandbox
 # MAGIC <img src= "https://cdn.oreillystatic.com/images/sitewide-headers/oreilly_logo_mark_red.svg"/>&nbsp;&nbsp;<font size="16"><b>Delta Lake: Up and Running<b></font></span>
 # MAGIC <img style="float: left; margin: 0px 15px 15px 0px;" src="https://learning.oreilly.com/covers/urn:orm:book:9781098139711/400w/" />   
-# MAGIC 
+# MAGIC
 # MAGIC  Name:          chapter 03/12 - User Defined Metadata
 # MAGIC  
 # MAGIC      Author:    Bennie Haelen
@@ -13,6 +13,7 @@
 # MAGIC      The following Delta Lake functionality is demonstrated in this notebook:
 # MAGIC        1  -  Set the custom-metadata option and insert a row of data
 # MAGIC        2  - ....
+# MAGIC
 
 # COMMAND ----------
 
@@ -31,7 +32,7 @@ spark.sparkContext
 
 # MAGIC %sql
 # MAGIC SET spark.databricks.delta.commitInfo.userMetadata=my-custom-metadata= { "GDPR": "INSERT Request 1x965383" };
-# MAGIC 
+# MAGIC
 # MAGIC INSERT INTO taxidb.yellowtaxisPartitioned
 # MAGIC (RideId, VendorId, PickupTime, DropTime, 
 # MAGIC  PickupLocationId, DropLocationId, CabNumber, 
@@ -39,7 +40,7 @@ spark.sparkContext
 # MAGIC  RatecodeId, PaymentType, TotalAmount,
 # MAGIC  FareAmount, Extra, MtaTax, TipAmount, 
 # MAGIC  TollsAmount, ImprovementSurcharge)
-# MAGIC 
+# MAGIC
 # MAGIC  VALUES(10000000, 3, '2019-11-01T00:00:00.000Z', 
 # MAGIC         '2019-11-01T00:02:23.573Z', 65, 71, 'TAC304',
 # MAGIC         '453987', 2, 4.5, 1, 1, 20.34, 15.0, 0.5, 

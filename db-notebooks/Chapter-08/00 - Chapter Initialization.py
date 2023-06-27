@@ -4,7 +4,7 @@
 # MAGIC <img style="float: left; margin: 0px 15px 15px 0px;" src="https://learning.oreilly.com/covers/urn:orm:book:9781098139711/400w/" />  
 # MAGIC
 # MAGIC  
-# MAGIC   Name:          chapter 07/00 - Chapter Initialization
+# MAGIC   Name:          chapter 08/00 - Chapter Initialization
 # MAGIC
 # MAGIC      Author:    Bennie Haelen
 # MAGIC      Date:      12-10-2022

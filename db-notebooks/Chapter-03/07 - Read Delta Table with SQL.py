@@ -2,14 +2,14 @@
 # MAGIC %md-sandbox
 # MAGIC <img src= "https://cdn.oreillystatic.com/images/sitewide-headers/oreilly_logo_mark_red.svg"/>&nbsp;&nbsp;<font size="16"><b>Delta Lake: Up and Running<b></font></span>
 # MAGIC <img style="float: left; margin: 0px 15px 15px 0px;" src="https://learning.oreilly.com/covers/urn:orm:book:9781098139711/400w/" />   
-# MAGIC 
+# MAGIC
 # MAGIC  Name:          chapter 03/07 - Read Delta Table with SQL
 # MAGIC  
 # MAGIC      Author:    Bennie Haelen
 # MAGIC      Date:      12-10-2022
 # MAGIC      Purpose:   The notebooks in this folder contains the code for chapter 3 of the book - Basic Operations on Delta Tables.
 # MAGIC                 This notebook illustrates how to read a table using SQL
-# MAGIC 
+# MAGIC
 # MAGIC                 
 # MAGIC      The following Delta Lake functionality is demonstrated in this notebook:
 # MAGIC        1 - Create a Delta Table on top of a Delta File
@@ -17,6 +17,8 @@
 # MAGIC        3 - Perform a DESCRIBE FORMATTED listing of the Delta table
 # MAGIC        4 - Illustrate the use of ANSI SQL in a more advanced query
 # MAGIC        5 - Demonstrate the usage of Spark SQL in Python
+# MAGIC
+# MAGIC
 
 # COMMAND ----------
 

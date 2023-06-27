@@ -144,6 +144,8 @@ df.write                         \
 # MAGIC %sh
 # MAGIC # We see the part files being added
 # MAGIC cat /dbfs/mnt/datalake/book/chapter07/TaxiRateCode.delta/_delta_log/00000000000000000004.json
+# MAGIC
+# MAGIC
 
 # COMMAND ----------
 
@@ -197,6 +199,8 @@ df.printSchema()
 # MAGIC # the metadata action with our schema, confirming the short data type
 # MAGIC # We also have an "add" action with the first part file
 # MAGIC cat /dbfs/mnt/datalake/book/chapter07/TaxiRateCode.delta/_delta_log/00000000000000000000.json
+# MAGIC
+# MAGIC
 
 # COMMAND ----------
 

@@ -2,16 +2,16 @@
 # MAGIC %md-sandbox
 # MAGIC <img src= "https://cdn.oreillystatic.com/images/sitewide-headers/oreilly_logo_mark_red.svg"/>&nbsp;&nbsp;<font size="16"><b>Delta Lake: Up and Running<b></font></span>
 # MAGIC <img style="float: left; margin: 0px 15px 15px 0px;" src="https://learning.oreilly.com/covers/urn:orm:book:9781098139711/400w/" />  
-# MAGIC 
+# MAGIC
 # MAGIC  
 # MAGIC Name:          chapter 04/02 - Update Operations
-# MAGIC 
+# MAGIC
 # MAGIC      Author:    Bennie Haelen
 # MAGIC      Date:      12-10-2022
 # MAGIC      Purpose:   The notebooks in this folder contains the code for chapter 4 of the book - Basic Operations on Delta Tables.
 # MAGIC                 This notebook perform an UPDATE operation and shows the impact on the part files and the details of what
 # MAGIC                 is recorded in the transaction log.
-# MAGIC 
+# MAGIC
 # MAGIC                 
 # MAGIC      The following actions are taken in this notebook:
 # MAGIC        1 - Perform a DESCRIBE HISTORY on the Starting Table
@@ -20,7 +20,7 @@
 # MAGIC        4 - Verify that the record has been updated correctly
 # MAGIC        5 - Use DESCRIBE HISTORY to look at the UPDATE operation
 # MAGIC        6 - Search the transaction log entry for the "Add File" and "Remove File" actions
-# MAGIC 
+# MAGIC
 # MAGIC    
 
 # COMMAND ----------
@@ -50,6 +50,7 @@
 # MAGIC     taxidb.YellowTaxis
 # MAGIC WHERE 
 # MAGIC     RideId = 9999994
+# MAGIC
 
 # COMMAND ----------
 
@@ -81,6 +82,7 @@
 # MAGIC     taxidb.YellowTaxis
 # MAGIC WHERE 
 # MAGIC     RideId = 9999994
+# MAGIC
 
 # COMMAND ----------
 

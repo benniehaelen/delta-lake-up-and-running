@@ -2,20 +2,22 @@
 # MAGIC %md-sandbox
 # MAGIC <img src= "https://cdn.oreillystatic.com/images/sitewide-headers/oreilly_logo_mark_red.svg"/>&nbsp;&nbsp;<font size="16"><b>Delta Lake: Up and Running<b></font></span>
 # MAGIC <img style="float: left; margin: 0px 15px 15px 0px;" src="https://learning.oreilly.com/covers/urn:orm:book:9781098139711/400w/" />   
-# MAGIC 
+# MAGIC
 # MAGIC   Name:          chapter 03/06 - Generated Columns
 # MAGIC  
 # MAGIC      Author:    Bennie Haelen
 # MAGIC      Date:      12-10-2022
 # MAGIC      Purpose:   The notebooks in this folder contains the code for chapter 3 of the book - Basic Operations on Delta Tables.
 # MAGIC                 This notebook illustrates how to use the GENERATED COLUMNS feature of Delta Lake
-# MAGIC 
+# MAGIC
 # MAGIC                 
 # MAGIC      The following Delta Lake functionality is demonstrated in this notebook:
 # MAGIC        1 - Create a table with GENERATE ALWAYS AS columns
 # MAGIC        2 - Insert a rows in the table, triggering the computation of the GENERATED columns
 # MAGIC        3 - Perform a SELECT to illustrate that the GENERATED ALWAYS AS column 
 # MAGIC        4 - An example of how you cannot use a non-deterministic function to calculate a GENERATED column
+# MAGIC
+# MAGIC
 
 # COMMAND ----------
 
