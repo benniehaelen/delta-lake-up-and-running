@@ -13,8 +13,13 @@
 # MAGIC      The following actions are taken in this notebook:
 # MAGIC        1 - Repartition the existing Delta Table to 200 files to enable demonstration of OPTIMIZE
 # MAGIC        2 - Run OPTIMIZE on Delta Table
-# MAGIC        2 - Run OPTIMIZE on the delta table again
-# MAGIC        3 - Add partition to the Delta Table and OPTIMIZE subset of data
+# MAGIC        3 - Run OPTIMIZE on the delta table again
+# MAGIC        4 - Add partition to the Delta Table and OPTIMIZE subset of data
+# MAGIC        5 - Repartition the existing Delta Table to 1000 files to enable demonstration of OPTIMIZE and Z-ORDER
+# MAGIC        6 - Execute baseline query
+# MAGIC        7 - OPTIMIZE and add Z-Ordering to the table
+# MAGIC        8 - Execute baseline query again
+# MAGIC        9 - Show file statistics used in data skipping
 # MAGIC    
 
 # COMMAND ----------
