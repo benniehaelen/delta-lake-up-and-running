@@ -67,7 +67,7 @@ from pyspark.sql.types import IntegerType
 # COMMAND ----------
 
 # MAGIC %fs
-# MAGIC rm -r dbfs:/mnt/datalake/book/chapter07/TaxiRateCode.delta
+# MAGIC rm -r dbfs:/mnt/datalake/book/chapter07/TaxiRateCode
 
 # COMMAND ----------
 
@@ -85,7 +85,7 @@ df = df.withColumn("RateCodeId", df["RateCodeId"].cast(IntegerType()))
 # Write in Delta Lake format
 df.write.format("delta")   \
         .mode("overwrite") \
-        .save("/mnt/datalake/book/chapter07/TaxiRateCode.delta")
+        .save("/mnt/datalake/book/chapter07/TaxiRateCode")
 
 df.printSchema()
 
@@ -115,7 +115,7 @@ df.printSchema()
 # MAGIC     RateCodeDesc            STRING
 # MAGIC     
 # MAGIC ) USING DELTA         
-# MAGIC LOCATION "/mnt/datalake/book/chapter07/TaxiRateCode.delta";
+# MAGIC LOCATION "/mnt/datalake/book/chapter07/TaxiRateCode";
 # MAGIC
 # MAGIC -- ALTER TABLE taxidb.YellowTaxis
 # MAGIC -- ALTER COLUMN RideId COMMENT 'This is the id of the Ride';

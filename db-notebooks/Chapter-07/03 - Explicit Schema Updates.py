@@ -33,7 +33,7 @@ from pyspark.sql.functions import col, cast
 # COMMAND ----------
 
 # MAGIC %fs
-# MAGIC rm -r dbfs:/mnt/datalake/book/chapter07/TaxiRateCode.delta
+# MAGIC rm -r dbfs:/mnt/datalake/book/chapter07/TaxiRateCode
 
 # COMMAND ----------
 
@@ -52,7 +52,7 @@ df = df.withColumn("RateCodeId", df["RateCodeId"].cast(IntegerType()))
 # Write in Delta Lake format
 df.write.format("delta")   \
         .mode("overwrite") \
-        .save("/mnt/datalake/book/chapter07/TaxiRateCode.delta")
+        .save("/mnt/datalake/book/chapter07/TaxiRateCode")
     
 # print the schema
 df.printSchema()
@@ -71,7 +71,7 @@ df.show()
 # MAGIC     RateCodeDesc            STRING
 # MAGIC     
 # MAGIC ) USING DELTA         
-# MAGIC LOCATION "/mnt/datalake/book/chapter07/TaxiRateCode.delta";
+# MAGIC LOCATION "/mnt/datalake/book/chapter07/TaxiRateCode";
 # MAGIC
 
 # COMMAND ----------
@@ -90,29 +90,29 @@ df.show()
 
 # MAGIC %sql
 # MAGIC -- Add a new column after the RateCodeId
-# MAGIC ALTER TABLE delta.`/mnt/datalake/book/chapter07/TaxiRateCode.delta`
+# MAGIC ALTER TABLE delta.`/mnt/datalake/book/chapter07/TaxiRateCode`
 # MAGIC ADD COLUMN RateCodeTaxPercent INT AFTER RateCodeId
 
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC DESCRIBE delta.`/mnt/datalake/book/chapter07/TaxiRateCode.delta`
+# MAGIC DESCRIBE delta.`/mnt/datalake/book/chapter07/TaxiRateCode`
 
 # COMMAND ----------
 
 # MAGIC %sql
 # MAGIC -- Show that the values for the new columns are NULL, as expected
-# MAGIC select * from delta.`/mnt/datalake/book/chapter07/TaxiRateCode.delta`
+# MAGIC select * from delta.`/mnt/datalake/book/chapter07/TaxiRateCode`
 
 # COMMAND ----------
 
 # MAGIC %sh
-# MAGIC ls -al /dbfs//mnt/datalake/book/chapter07/TaxiRateCode.delta/_delta_log/*.json
+# MAGIC ls -al /dbfs//mnt/datalake/book/chapter07/TaxiRateCode/_delta_log/*.json
 
 # COMMAND ----------
 
 # MAGIC %sh
-# MAGIC cat /dbfs/mnt/datalake/book/chapter07/TaxiRateCode.delta/_delta_log/00000000000000000001.json 
+# MAGIC cat /dbfs/mnt/datalake/book/chapter07/TaxiRateCode/_delta_log/00000000000000000001.json 
 # MAGIC
 
 # COMMAND ----------
@@ -137,13 +137,13 @@ df.show()
 # COMMAND ----------
 
 # MAGIC %sh
-# MAGIC grep "commitInfo" /dbfs/mnt/datalake/book/chapter07/TaxiRateCode.delta/_delta_log/00000000000000000001.json > /tmp/commit.json
+# MAGIC grep "commitInfo" /dbfs/mnt/datalake/book/chapter07/TaxiRateCode/_delta_log/00000000000000000001.json > /tmp/commit.json
 # MAGIC python -m json.tool < /tmp/commit.json
 
 # COMMAND ----------
 
 # MAGIC %sh
-# MAGIC grep "metaData" /dbfs/mnt/datalake/book/chapter07/TaxiRateCode.delta/_delta_log/00000000000000000001.json > /tmp/commit.json
+# MAGIC grep "metaData" /dbfs/mnt/datalake/book/chapter07/TaxiRateCode/_delta_log/00000000000000000001.json > /tmp/commit.json
 # MAGIC python -m json.tool < /tmp/commit.json
 
 # COMMAND ----------
@@ -184,12 +184,12 @@ df.show()
 # COMMAND ----------
 
 # MAGIC %sh
-# MAGIC ls -al /dbfs/mnt/datalake/book/chapter07/TaxiRateCode.delta/_delta_log/*.json
+# MAGIC ls -al /dbfs/mnt/datalake/book/chapter07/TaxiRateCode/_delta_log/*.json
 
 # COMMAND ----------
 
 # MAGIC %sh
-# MAGIC cat /dbfs/mnt/datalake/book/chapter07/TaxiRateCode.delta/_delta_log/00000000000000000003.json
+# MAGIC cat /dbfs/mnt/datalake/book/chapter07/TaxiRateCode/_delta_log/00000000000000000003.json
 
 # COMMAND ----------
 
