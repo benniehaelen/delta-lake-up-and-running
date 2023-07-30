@@ -2,13 +2,13 @@
 # MAGIC %md-sandbox
 # MAGIC <img src= "https://cdn.oreillystatic.com/images/sitewide-headers/oreilly_logo_mark_red.svg"/>&nbsp;&nbsp;<font size="16"><b>Delta Lake: Up and Running<b></font></span>
 # MAGIC <img style="float: left; margin: 0px 15px 15px 0px;" src="https://learning.oreilly.com/covers/urn:orm:book:9781098139711/400w/" />  
-# MAGIC 
+# MAGIC
 # MAGIC  
-# MAGIC   Name:          chapter 05/03 - Chapter 5 Optimization
-# MAGIC 
+# MAGIC   Name:          chapter 05/04 - Chapter 5 Optimization
+# MAGIC
 # MAGIC      Purpose:   The notebooks in this folder contains the code for chapter 5 of the book - Performance Tuning.
 # MAGIC                 This notebook illustrates partitioning.
-# MAGIC 
+# MAGIC
 # MAGIC                 
 # MAGIC      The following actions are taken in this notebook:
 # MAGIC        1 - Remove existing Delta table directory to remove all old files
@@ -43,15 +43,15 @@ destination_path = "/mnt/datalake/book/chapter05/YellowTaxisDelta/"
 
 # read the delta table, add columns to partitions on, and write it using a partition.
 # make sure to overwrite the existing schema if the table already exists since we are adding partitions
-spark.read.format("parquet")\
-.load(source_path)\
-.withColumn('PickupMonth', month('tpep_pickup_datetime'))\
-.withColumn('PickupDate', to_date('tpep_pickup_datetime'))\
-.write\
-.partitionBy('PickupMonth')\
-.format("delta")\
-.option("overwriteSchema", "true")\
-.mode("overwrite")\
+spark.read.format("parquet")                                \
+.load(source_path)                                          \
+.withColumn('PickupMonth', month('tpep_pickup_datetime'))   \
+.withColumn('PickupDate', to_date('tpep_pickup_datetime'))  \
+.write                                                      \
+.partitionBy('PickupMonth')                                 \
+.format("delta")                                            \
+.option("overwriteSchema", "true")                          \
+.mode("overwrite")                                          \
 .save(destination_path)
 
 # COMMAND ----------
@@ -72,6 +72,15 @@ print(os.listdir('/dbfs/'+destination_path))
 
 # COMMAND ----------
 
+# DBTITLE 1,Show AddFile metadata entry for partition
+# MAGIC %sh
+# MAGIC # find the last transaction entry and search for "add" to find an added file
+# MAGIC # the output will show you the partitionValues
+# MAGIC grep "\"add"\" "$(ls -1rt /dbfs/mnt/datalake/book/chapter05/YellowTaxisDelta/_delta_log/*.json | tail -n1)" | sed -n 1p > /tmp/commit.json | sed -n 1p > /tmp/commit.json
+# MAGIC python -m json.tool < /tmp/commit.json
+
+# COMMAND ----------
+
 # MAGIC %md 
 # MAGIC ###Step 3 - Update specified partitions
 
@@ -79,17 +88,18 @@ print(os.listdir('/dbfs/'+destination_path))
 
 # DBTITLE 1,Use replaceWhere to update a specified partition
 # import month from sql functions
-from pyspark.sql.functions import (lit, col)
-from pyspark.sql.types import (LongType)
+from pyspark.sql.functions import lit
+from pyspark.sql.types import LongType
 
+# use replaceWhere to update a specified partition
 spark.read                                                              \
     .format("delta")                                                    \
     .load(destination_path)                                             \
-    .where((col("PickupMonth") == '12') & (col("payment_type") == '3')) \
+    .where("PickupMonth == '12' and payment_type == '3' ")              \
     .withColumn("payment_type", lit(4).cast(LongType()))                \
     .write                                                              \
     .format("delta")                                                    \
-    .option("replaceWhere", "PickupMonth = '12'")    \
+    .option("replaceWhere", "PickupMonth = '12'")                       \
     .mode("overwrite")                                                  \
     .save(destination_path)
 
@@ -98,8 +108,8 @@ spark.read                                                              \
 # DBTITLE 1,Perform compaction on a specified partition
 # read a partition from the delta table and repartition it 
 spark.read.format("delta")          \
-.load(path)                         \
-.where((col("PickupMonth") = '12')  \ 
+.load(destination_path)             \
+.where("PickupMonth = '12' ")       \
 .repartition(5)                     \
 .write                              \
 .option("dataChange", "false")      \
