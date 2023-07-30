@@ -96,11 +96,11 @@ display(df)
 
 # MAGIC %sql
 # MAGIC SELECT *
-# MAGIC FROM table_changes('taxidb.tripAggregates', 1, 5)
+# MAGIC FROM table_changes('taxidb.tripAggregates', 1)
 # MAGIC --WHERE VendorId = 1 AND _change_type = 'update_postimage'
 # MAGIC ORDER BY _commit_timestamp
 
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC describe history taxidb.tripAggregates
+# MAGIC select * from taxidb.tripAggregates 
