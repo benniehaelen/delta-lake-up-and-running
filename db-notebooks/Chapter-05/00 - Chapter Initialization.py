@@ -13,9 +13,8 @@
 # MAGIC                 
 # MAGIC     The following actions are taken in this notebook:
 # MAGIC      1 - Drop the taxidb database with a cascade, deleting all tables in the database
-# MAGIC      2 - Copy the YellowTaxisParquet files from DataFiles to the chapter05 directory
-# MAGIC      3 - Read the parquet files, and write the table in Delta Format
-# MAGIC      4 - Create database and register the delta table in hive
+# MAGIC      2 - Read the parquet files, and write the table in Delta Format
+# MAGIC      3 - Create database and register the delta table in hive
 # MAGIC    
 
 # COMMAND ----------
@@ -32,79 +31,31 @@
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ###2 - Copy the YellowTaxisParquet files from DataFiles to the chapter05 directory
+# MAGIC ###2 - Read the parquet files, and write the table in Delta Format
 
 # COMMAND ----------
 
-# MAGIC %fs
-# MAGIC rm -r /mnt/datalake/book/chapter05/YellowTaxisParquet
+# DBTITLE 1,Read files from dropbox
+import pandas as pd
+import requests
+
+# define dropbox download url for chapter 05 source file
+dropbox_url = 'https://dl.dropboxusercontent.com/s/tgg5s887otj97li/yellow_tripdata_2022.parquet?dl=0'
+
+# read the parquet file from dropbox using pandas then convert to spark dataframe
+pandas_df = pd.read_parquet(dropbox_url)
+df = spark.createDataFrame(pandas_df)
 
 # COMMAND ----------
 
-# MAGIC %fs
-# MAGIC cp -r mnt/datalake/book/DataFiles/YellowTaxisParquet /mnt/datalake/book/chapter05/YellowTaxisParquet
+# DBTITLE 1,Remove exsiting Delta table
+dbutils.fs.rm('/mnt/datalake/book/chapter05/YellowTaxisDelta', True)
 
 # COMMAND ----------
 
-# MAGIC %md
-# MAGIC ###3 - Read the parquet files, and write the table in Delta Format
-
-# COMMAND ----------
-
-# MAGIC %fs
-# MAGIC rm -r /mnt/datalake/book/chapter05/YellowTaxisDelta
-
-# COMMAND ----------
-
+# DBTITLE 1,Write delta table
 from pyspark.sql.types import (StructType,StructField,StringType,IntegerType,TimestampType,DoubleType,LongType)
 from pyspark.sql.functions import (to_date, year, month, dayofmonth)
-
-# define schema of data
-schema = schema = (
-    StructType()
-    .add("VendorID", LongType(), True)
-    .add("tpep_pickup_datetime", TimestampType(), True)
-    .add("tpep_dropoff_datetime", TimestampType(), True)
-    .add("passenger_count", DoubleType(), True)
-    .add("trip_distance", DoubleType(), True)
-    .add("RatecodeID", DoubleType(), True)
-    .add("store_and_fwd_flag", StringType(), True)
-    .add("PULocationID", LongType(), True)
-    .add("DOLocationID", LongType(), True)
-    .add("payment_type", LongType(), True)
-    .add("fare_amount", DoubleType(), True)
-    .add("extra", DoubleType(), True)
-    .add("mta_tax", DoubleType(), True)
-    .add("tip_amount", DoubleType(), True)
-    .add("tolls_amount", DoubleType(), True)
-    .add("total_amount", DoubleType(), True)
-    .add("congestion_surcharge", DoubleType(), True)
-    .add("airport_fee", DoubleType(), True)
-)
-
-# read multiple years of parquet files
-years = [2022,2021]
-
-# create blank dataframe
-df = spark.createDataFrame(spark.sparkContext.emptyRDD(), schema)
-
-# for each item in the year list, combine the data into a single dataframe
-for i in years:
-    # union dataframes with each year of data together
-    df = df.union(
-        spark.read.format("parquet")
-        .schema(schema)
-        .load(f"/mnt/datalake/book/chapter05/YellowTaxisParquet/{i}")
-    )
-    
-# add date columns to dataframe
-df = (
-    df.withColumn("PickupDate", to_date("tpep_pickup_datetime"))
-    .withColumn("PickupYear", year('tpep_pickup_datetime'))
-    .withColumn("PickupMonth", month('tpep_pickup_datetime'))
-    .withColumn("PickupDay", dayofmonth('tpep_pickup_datetime'))
-)
-
 
 # define the path and how many partitions we want this file broken up into so we can demonstrate compaction
 path = "/mnt/datalake/book/chapter05/YellowTaxisDelta/"
@@ -116,15 +67,17 @@ df.repartition(numberOfFiles).write.format("delta").mode("overwrite").save(path)
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ###4 - Create database and register the delta table in hive
+# MAGIC ###3 - Create database and register the delta table in hive
 
 # COMMAND ----------
 
+# DBTITLE 1,Create database
 # MAGIC %sql
 # MAGIC CREATE DATABASE IF NOT EXISTS taxidb;
 
 # COMMAND ----------
 
+# DBTITLE 1,Register table metadata
 # MAGIC %sql
 # MAGIC CREATE TABLE IF NOT EXISTS taxidb.tripData
 # MAGIC USING DELTA LOCATION '/mnt/datalake/book/chapter05/YellowTaxisDelta';

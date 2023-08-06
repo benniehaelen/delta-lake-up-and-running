@@ -30,20 +30,20 @@
 
 # DBTITLE 1,Compact the existing Delta table
 # define the path and number of files to repartition
-path = "/mnt/datalake/book/chapter05/YellowTaxisDelta"
+delta_table_path = "/mnt/datalake/book/chapter05/YellowTaxisDelta"
 numberOfFiles = 5
 
 
 # read the delta table and repartition it
 spark.read                      \
  .format("delta")               \
- .load(path)                    \
+ .load(delta_table_path)        \
  .repartition(numberOfFiles)    \
  .write                         \
  .option("dataChange", "false") \
  .format("delta")               \
  .mode("overwrite")             \
- .save(path)
+ .save(delta_table_path)
 
 # COMMAND ----------
 
@@ -52,17 +52,16 @@ spark.read                      \
 
 # COMMAND ----------
 
-# define the path and number of files to repartition
-path = "/mnt/datalake/book/chapter05/YellowTaxisDelta"
+# define the number of files to repartition
 numberOfFiles = 1000
 
 # read the delta table and repartition it
-spark.read.format("delta").load(path).repartition(numberOfFiles)    \
- .write                                                             \
- .option("dataChange", "false")                                     \
- .format("delta")                                                   \
- .mode("overwrite")                                                 \
- .save(path)
+spark.read.format("delta").load(delta_table_path).repartition(numberOfFiles)    \
+ .write                                                                         \
+ .option("dataChange", "false")                                                 \
+ .format("delta")                                                               \
+ .mode("overwrite")                                                             \
+ .save(delta_table_path)
 
 # COMMAND ----------
 
@@ -122,8 +121,7 @@ spark.read.format("delta").load(path).repartition(numberOfFiles)    \
 # COMMAND ----------
 
 # DBTITLE 1,Repartition the table
-# define the path and number of files to repartition
-path = "/mnt/datalake/book/chapter05/YellowTaxisDelta"
+# define the number of files to repartition
 numberOfFiles = 1000
 
 # read the delta table and repartition it
